@@ -1,0 +1,147 @@
+بالطبع! سأساعدك في إنشاء برنامج بسيط بلغة HTML لحساب الجرعة الشعاعية. سيتضمن البرنامج واجهة جذابة، وسيمكنك من إدخال اسم الفحص أو أكثر، وسيظهر الجرعة الشعاعية مقارنة بالجرعات المسموح بها سنويًا. كما سيكون هناك ترتيب أبجدي للفحوصات.
+
+إليك الكود:
+
+```html
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الجرعة الشعاعية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label, select, button {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>حاسبة الجرعة الشعاعية</h1>
+        <label for="exams">اختر الفحوصات:</label>
+        <select id="exams" multiple>
+            <option value="Chest xray">أشعة الصدر</option>
+            <option value="Chest ct scan">تصوير مقطعي محوسب للصدر</option>
+            <option value="Cardiac ct scan">تصوير مقطعي محوسب للقلب</option>
+            <option value="Abdomen ct scan">تصوير مقطعي محوسب للبطن</option>
+            <option value="Abdomen xray">أشعة للبطن</option>
+            <option value="Abdomen and pelvic ct scan">تصوير مقطعي محوسب للبطن والحوض</option>
+            <option value="Pelvis X-ray">أشعة للحوض</option>
+            <option value="PET Ct scan">تصوير PET</option>
+            <option value="Lower Extremity Xray 2 views">أشعة الأطراف السفلية (رؤيتان)</option>
+            <option value="Upper extremity Xray 2 views">أشعة الأطراف العلوية (رؤيتان)</option>
+            <option value="Lower extremities ct scan">تصوير مقطعي محوسب للأطراف السفلية</option>
+            <option value="Joint ct scan">تصوير مقطعي محوسب للمفاصل</option>
+            <option value="Cervical xray">أشعة عنق الرحم</option>
+            <option value="Cervical ct scan">تصوير مقطعي محوسب للعنق</option>
+            <option value="Dorsal ct scan">تصوير مقطعي محوسب للظهر</option>
+            <option value="Dorsal xray">أشعة للظهر</option>
+            <option value="Brain ct scan">تصوير مقطعي محوسب للدماغ</option>
+            <option value="Skull xray">أشعة للجمجمة</option>
+            <option value="Chest xray 2 views">أشعة الصدر (رؤيتان)</option>
+            <option value="Pelvic ct scan">تصوير مقطعي محوسب للحوض</option>
+            <option value="MRI">تصوير بالرنين المغناطيسي</option>
+            <option value="Ultrasound examination">فحص بالموجات فوق الصوتية</option>
+            <option value="Bone scan">فحص العظام</option>
+            <option value="Thyroid scan">فحص الغدة الدرقية</option>
+            <option value="Gallium scan">فحص الجاليوم</option>
+            <option value="Thallium scan">فحص الثاليوم</option>
+            <option value="Tc99 scan">فحص Tc99</option>
+            <option value="Iodine scan">فحص اليود</option>
+            <option value="DSMA scan">فحص DSMA</option>
+            <option value="Background radiation">الإشعاع الخلفي</option>
+            <option value="Traveling by airplane 2 hours trip">السفر بالطائرة (رحلة ساعتين)</option>
+        </select>
+        <button onclick="calculateDose()">احسب الجرعة</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const doseMapping = {
+            "Chest xray": 0.1,
+            "Chest ct scan": 10,
+            "Cardiac ct scan": 12,
+            "Abdomen ct scan": 10,
+            "Abdomen xray": 0.3,
+            "Abdomen and pelvic ct scan": 15,
+            "Pelvis X-ray": 0.1,
+            "PET Ct scan": 25,
+            "Lower Extremity Xray 2 views": 0.2,
+            "Upper extremity Xray 2 views": 0.2,
+            "Lower extremities ct scan": 10,
+            "Joint ct scan": 7,
+            "Cervical xray": 0.2,
+            "Cervical ct scan": 8,
+            "Dorsal ct scan": 8,
+            "Dorsal xray": 0.2,
+            "Brain ct scan": 2,
+            "Skull xray": 0.2,
+            "Chest xray 2 views": 0.2,
+            "Pelvic ct scan": 10,
+            "MRI": 0,
+            "Ultrasound examination": 0,
+            "Bone scan": 5,
+            "Thyroid scan": 5,
+            "Gallium scan": 5,
+            "Thallium scan": 5,
+            "Tc99 scan": 5,
+            "Iodine scan": 5,
+            "DSMA scan": 5,
+            "Background radiation": 3,
+            "Traveling by airplane 2 hours trip": 0.01
+        };
+
+        function calculateDose() {
+            const selectedOptions = Array.from(document.getElementById('exams').selectedOptions);
+            const totalDose = selectedOptions.reduce((sum, option) => {
+                return sum + (doseMapping[option.value] || 0);
+            }, 0);
+
+            const annualLimit = 50; // الجرعة المسموح بها سنويًا (وحدة مللي سيڤرت)
+            let message = `إجمالي الجرعة الشعاعية: ${totalDose} مللي سيڤرت\n`;
+
+            if (totalDose > annualLimit) {
+                message += `تحذير: تجاوزت الجرعة المسموح بها سنويًا (${annualLimit} مللي سيڤرت)`;
+            } else {
+                message += `أنت ضمن الحدود المسموح بها سنويًا (${annualLimit} مللي سيڤرت)`;
+            }
+
+            document.getElementById('result').innerText = message;
+        }
+    </script>
+</body>
+</html>
+```
+
+### كيفية الاستخدام:
+1. انسخ الكود أعلاه وضعه في ملف بامتداد `.html`.
+2. افتح الملف في متصفح الويب.
+3. اختر الفحوصات التي تريد حساب الجرعة لها واضغط على زر "احسب الجرعة".
+
+هذا البرنامج سيساعدك في حساب الجرعة الشعاعية بسهولة ويظهر لك مقارنة مع الجرعة المسموح بها سنويًا. يمكنك إضافة أو تعديل الفحوصات حسب الحاجة.
